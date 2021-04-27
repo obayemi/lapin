@@ -339,13 +339,8 @@ impl IoLoop {
                     .poll_read_from(readable_context, Pin::new(&mut self.stream))?;
 
                 if let Some(sz) = self.socket_state.handle_read_poll(res) {
-                    if sz > 0 {
                         trace!("read {} bytes", sz);
                         self.receive_buffer.fill(sz);
-                    } else {
-                        error!("Socket was readable but we read 0, marking as wouldblock");
-                        self.socket_state.handle_read_poll(Poll::Pending);
-                    }
                 }
                 Ok(())
             }
